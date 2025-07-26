@@ -22,10 +22,12 @@ import {
   Stacked,
 } from "./pages";
 
+import { useStateContext } from "./contexts/contextProvider";
+
 import "./App.css";
 
 const App = () => {
-  const activeMenu = true; // This can be a state or prop to toggle sidebar visibility
+  const { activeMenu } = useStateContext();
 
   return (
     <div>
