@@ -9,6 +9,7 @@ import avatar from "../data/avatar.jpg";
 import { Cart, Chat, Notification, UserProfile } from ".";
 import { useStateContext } from "../contexts/contextProvider";
 
+// NavButton component
 const NavButton = ({ title, customFunc, icon, color, dotColor }) => (
   <TooltipComponent content={title} position="BottomCenter">
     <button
@@ -27,10 +28,36 @@ const NavButton = ({ title, customFunc, icon, color, dotColor }) => (
   </TooltipComponent>
 );
 
+// Navbar component
 const Navbar = () => {
-  const { activeMenu, setActiveMenu } = useStateContext();
+  const {
+    activeMenu,
+    setActiveMenu,
+    isClicked,
+    setIsClicked,
+    handleClick,
+    screenSize,
+    setscreenSize,
+  } = useStateContext();
 
-  const handleClick = (item) => console.log(`Clicked on ${item}`);
+  // Handle screen resize to update screen size state
+  useEffect(() => {
+    const handleResize = () => setscreenSize(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+
+    handleResize(); // Set initial screen size
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Adjust active menu based on screen size
+  useEffect(() => {
+    if (screenSize <= 900) {
+      setActiveMenu(false);
+    } else {
+      setActiveMenu(true);
+    }
+  }, [screenSize]);
 
   return (
     <div className="flex justify-between p-2 md:mx-6 relative">
@@ -79,6 +106,11 @@ const Navbar = () => {
             <MdKeyboardArrowDown className="text-gray-400 text-14" />
           </div>
         </TooltipComponent>
+
+        {isClicked.cart && <Cart />}
+        {isClicked.chat && <Chat />}
+        {isClicked.notification && <Notification />}
+        {isClicked.userProfile && <UserProfile />}
       </div>
     </div>
   );
